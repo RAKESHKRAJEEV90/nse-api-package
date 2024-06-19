@@ -1,0 +1,37 @@
+{
+  "name": "nse-api-package",
+  "version": "1.0.0",
+  "description": "A Node.js wrapper for the NSE India API",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RAKESHKRAJEEV90/nse-api-package.git"
+  },
+  "keywords": [
+    "NSE",
+    "API",
+    "wrapper",
+    "stock",
+    "market"
+  ],
+  "author": "rk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RAKESHKRAJEEV90/nse-api-package/issues"
+  },
+  "homepage": "https://github.com/RAKESHKRAJEEV90/nse-api-package#readme",
+  
+  "dependencies": {
+    "axios": "^1.7.2",
+    "axios-cookiejar-support": "^5.0.2",
+    "tough-cookie": "^4.1.4"
+  },
+  "devDependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0"
+  }
+}
