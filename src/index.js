@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
-
+import NSEArchive from './archive';
 class NSELive {
   constructor() {
     this.jar = new CookieJar();
@@ -63,10 +63,11 @@ class NSELive {
   }
 
   async chartData(symbol, indices = false) {
-    const params = { index: symbol + 'EQN' };
+    const params = { index: symbol + 'EQN'};
     if (indices) {
       params.index = symbol;
       params.indices = 'true';
+      
     }
     return this.get('/chart-databyindex', params);
   }
@@ -103,13 +104,14 @@ class NSELive {
     return this.liveIndex('SECURITIES IN F&O');
   }
 
-  async preOpenMarket(key = 'NIFTY') {
+  async preOpenMarket(key) {
     return this.get('/market-data-pre-open', { key });
   }
 
   async holidayList() {
     return this.get('/holiday-master', { type: 'trading' });
   }
+
 }
 
-export { NSELive };
+export { NSELive,NSEArchive };
