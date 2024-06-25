@@ -1,24 +1,27 @@
-import axios from 'axios';
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
-import NSEArchive from './archive';
+const axios = require('axios');
+const { wrapper } = require('axios-cookiejar-support');
+const { CookieJar } = require('tough-cookie');
+
 class NSELive {
   constructor() {
     this.jar = new CookieJar();
-    this.session = wrapper(axios.create({
-      baseURL: 'https://www.nseindia.com/api',
-      jar: this.jar,
-      withCredentials: true,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
-        'Accept': '*/*',
-        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Connection': 'keep-alive'
-      }
-    }));
+    this.session = wrapper(
+      axios.create({
+        baseURL: 'https://www.nseindia.com/api',
+        jar: this.jar,
+        withCredentials: true,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
+          Accept: '*/*',
+          'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Connection: 'keep-alive',
+        },
+      })
+    );
     this.initialized = false;
   }
 
@@ -44,7 +47,6 @@ class NSELive {
       return null;
     }
   }
-  
 
   async stockQuote(symbol) {
     return this.get('/quote-equity', { symbol });
@@ -63,11 +65,10 @@ class NSELive {
   }
 
   async chartData(symbol, indices = false) {
-    const params = { index: symbol + 'EQN'};
+    const params = { index: symbol + 'EQN' };
     if (indices) {
       params.index = symbol;
       params.indices = 'true';
-      
     }
     return this.get('/chart-databyindex', params);
   }
@@ -111,7 +112,6 @@ class NSELive {
   async holidayList() {
     return this.get('/holiday-master', { type: 'trading' });
   }
-
 }
 
-export { NSELive,NSEArchive };
+module.exports = NSELive;

@@ -1,26 +1,29 @@
-import axios from 'axios';
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
-import { createWriteStream, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+const axios = require('axios');
+const { wrapper } = require('axios-cookiejar-support');
+const { CookieJar } = require('tough-cookie');
+const { createWriteStream, existsSync, mkdirSync } = require('fs');
+const { join } = require('path');
 
 class NSEArchive {
   constructor() {
     this.jar = new CookieJar();
-    this.session = wrapper(axios.create({
-      baseURL: 'https://nsearchives.nseindia.com/products/content',
-      jar: this.jar,
-      withCredentials: true,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
-        'Accept': '*/*',
-        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Connection': 'keep-alive'
-      }
-    }));
+    this.session = wrapper(
+      axios.create({
+        baseURL: 'https://nsearchives.nseindia.com/products/content',
+        jar: this.jar,
+        withCredentials: true,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
+          Accept: '*/*',
+          'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Connection: 'keep-alive',
+        },
+      })
+    );
     this.initialized = false;
   }
 
@@ -64,7 +67,6 @@ class NSEArchive {
     const url = `/sec_bhavdata_full_${formattedDate}.csv`;
     const outputPath = join(outputDir, `eod_${formattedDate}.csv`);
 
-    // Ensure the output directory exists
     if (!existsSync(outputDir)) {
       mkdirSync(outputDir, { recursive: true });
     }
@@ -77,15 +79,13 @@ class NSEArchive {
     }
   }
 
-  // Function to convert DDMMYYYY to Date object
   static convertToDate(dateStr) {
     const day = parseInt(dateStr.slice(0, 2));
-    const month = parseInt(dateStr.slice(2, 4)) - 1; // Months are 0-based in JavaScript
+    const month = parseInt(dateStr.slice(2, 4)) - 1;
     const year = parseInt(dateStr.slice(4, 8));
     return new Date(year, month, day);
   }
 
-  // Helper function to format Date object to DDMMYYYY string
   static formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -93,7 +93,6 @@ class NSEArchive {
     return `${day}${month}${year}`;
   }
 
-  // Function to find dates between two dates
   static datesBetween(startDateStr, endDateStr) {
     const startDate = NSEArchive.convertToDate(startDateStr);
     const endDate = NSEArchive.convertToDate(endDateStr);
@@ -109,18 +108,14 @@ class NSEArchive {
     return datesInBetween;
   }
 
-  // Main function to download EOD data between dates
   async downloadEodDataBetweenDates(startDateStr, endDateStr, outputDir) {
     try {
-      // Create the output directory if it doesn't exist
       if (!existsSync(outputDir)) {
         mkdirSync(outputDir, { recursive: true });
       }
 
       const datesInBetween = NSEArchive.datesBetween(startDateStr, endDateStr);
-      
 
-      // Iterate over each date in the datesInBetween array and download data
       for (const date of datesInBetween) {
         await this.downloadEodDataForDate(date, outputDir);
         console.log(`Downloaded data for date: ${date}`);
@@ -132,18 +127,17 @@ class NSEArchive {
     }
   }
 
- // Function to download today's EOD data
- async downloadTodayEodData(outputDir) {
-  const today = new Date();
-  const formattedDate = NSEArchive.formatDate(today);
+  async downloadTodayEodData(outputDir) {
+    const today = new Date();
+    const formattedDate = NSEArchive.formatDate(today);
 
-  try {
-    await this.downloadEodDataForDate(formattedDate, outputDir);
-    console.log(`Downloaded today's data for date: ${formattedDate}`);
-  } catch (error) {
-    console.error(`Failed to download today's EOD data for ${formattedDate}: ${error.message}`);
+    try {
+      await this.downloadEodDataForDate(formattedDate, outputDir);
+      console.log(`Downloaded today's data for date: ${formattedDate}`);
+    } catch (error) {
+      console.error(`Failed to download today's EOD data for ${formattedDate}: ${error.message}`);
+    }
   }
 }
-}
 
-export default NSEArchive
+module.exports = NSEArchive;
