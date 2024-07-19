@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { wrapper } = require('axios-cookiejar-support');
 const { CookieJar } = require('tough-cookie');
-const { createWriteStream, existsSync, mkdirSync } = require('fs');
+const { createWriteStream, existsSync, mkdirSync, unlinkSync } = require('fs');
 const { join } = require('path');
 
 class NSEArchive {
@@ -76,6 +76,9 @@ class NSEArchive {
       console.log(`EOD data for ${formattedDate} saved to ${outputPath}`);
     } catch (error) {
       console.error(`Failed to download EOD data for ${formattedDate}: ${error.message}`);
+      if (existsSync(outputPath)) {
+        unlinkSync(outputPath);
+      }
     }
   }
 

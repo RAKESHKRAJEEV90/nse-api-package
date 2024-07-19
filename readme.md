@@ -49,8 +49,7 @@ nseLive.chartData('NIFTY 50',true)
 //Example: Fetch  EOD data From NSE
 ```bash
 nseArchive.downloadEodDataBetweenDates('15052024','20062024','./output')
-  .then(data => console.log(data));
-  .catch(error => console.error(error));
+  
 ```
 # API
 
