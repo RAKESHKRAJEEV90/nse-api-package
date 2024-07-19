@@ -119,9 +119,9 @@ class NSELive {
   async boardMeetings() {
     return this.get('/home-board-meetings?index=equities');
   }
-  async corporateActions(index) {
+  async corporateActions(index,from_date,to_date) {
     // return this.get('/home-corporate-actions',{index});
-    return this.get('/corporates-corporateActions',{index});
+    return this.get('/corporates-corporateActions',{index,from_date,to_date});
 
   }
   async priceBandHitter() {
