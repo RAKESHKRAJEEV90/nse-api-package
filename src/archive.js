@@ -3,13 +3,12 @@ const { wrapper } = require('axios-cookiejar-support');
 const { CookieJar } = require('tough-cookie');
 const { createWriteStream, existsSync, mkdirSync, unlinkSync } = require('fs');
 const { join } = require('path');
-
 class NSEArchive {
   constructor() {
     this.jar = new CookieJar();
     this.session = wrapper(
       axios.create({
-        baseURL: 'https://nsearchives.nseindia.com/products/content',
+        baseURL: 'https://nsearchives.nseindia.com',
         jar: this.jar,
         withCredentials: true,
         headers: {
@@ -64,7 +63,7 @@ class NSEArchive {
 
   async downloadEodDataForDate(date, outputDir) {
     const formattedDate = date.toString();
-    const url = `/sec_bhavdata_full_${formattedDate}.csv`;
+    const url = `/products/content/sec_bhavdata_full_${formattedDate}.csv`;
     const outputPath = join(outputDir, `eod_${formattedDate}.csv`);
 
     if (!existsSync(outputDir)) {
@@ -141,6 +140,30 @@ class NSEArchive {
       console.error(`Failed to download today's EOD data for ${formattedDate}: ${error.message}`);
     }
   }
+
+ 
+  async downloadSecurityBanned(outputDir){
+    const outputPath = join(outputDir, 'securitiesBanned.csv');
+    const url = '/content/fo/fo_secban.csv';
+
+    if (!existsSync(outputDir)) {
+      mkdirSync(outputDir, { recursive: true });
+    }
+    try {
+      await this.downloadFile(url, outputPath);
+      console.log(` Data for securities Banned saved to ${outputPath}`);
+    } catch (error) {
+      console.error(`Failed to download Data for securities Banned: ${error.message}`);
+      if (existsSync(outputPath)) {
+        unlinkSync(outputPath);
+      }
+    }
+
+  }
+
+
 }
+
+
 
 module.exports = NSEArchive;
