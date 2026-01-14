@@ -1,9 +1,9 @@
 {
   "name": "nse-api-package",
-  "version": "2.2.6",
+  "version": "2.3.7",
   "description": "A Node.js wrapper for the NSE India API",
-  "main": "app.js", 
-  "type": "commonjs", 
+  "main": "app.js",
+  "type": "commonjs",
   "scripts": {
     "test": "mocha"
   },
