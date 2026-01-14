@@ -141,8 +141,8 @@ class NSEArchive {
     }
   }
 
- 
-  async downloadSecurityBanned(outputDir){
+
+  async downloadSecurityBanned(outputDir) {
     const outputPath = join(outputDir, 'securitiesBanned.csv');
     const url = '/content/fo/fo_secban.csv';
 
@@ -161,6 +161,24 @@ class NSEArchive {
 
   }
 
+
+  async downloadParticipantwiseOi(outputDir, date) {
+    const outputPath = join(outputDir, 'participantwise.csv');
+    const url = `/content/nsccl/fao_participant_oi_${date}.csv`;
+
+    if (!existsSync(outputDir)) {
+      mkdirSync(outputDir, { recursive: true });
+    }
+    try {
+      await this.downloadFile(url, outputPath);
+      console.log(` Data for participantwise OI saved to ${outputPath}`);
+    } catch (error) {
+      console.error(`Failed to download Data for Participantwise OI: ${error.message}`);
+      if (existsSync(outputPath)) {
+        unlinkSync(outputPath);
+      }
+    }
+  }
 
 }
 
